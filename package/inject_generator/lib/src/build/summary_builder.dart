@@ -284,9 +284,7 @@ class _ProviderSummaryVisitor extends InjectClassVisitor {
 
   bool _checkReturnType(
       ExecutableElement executableElement, Element returnTypeElement) {
-    if (returnTypeElement.kind == ElementKind.DYNAMIC ||
-        returnTypeElement is TypeDefiningElement &&
-            returnTypeElement.type.isDynamic) {
+    if (returnTypeElement.kind == ElementKind.DYNAMIC) {
       builderContext.log.severe(
         executableElement,
         'provider return type resolved to dynamic. This can happen when the '
@@ -303,9 +301,8 @@ class _ProviderSummaryVisitor extends InjectClassVisitor {
 
 ProviderSummary _createConstructorProviderSummary(
     ConstructorElement element, bool isSingleton) {
-  var returnType = element.enclosingElement.type;
   return new ProviderSummary(
-      getInjectedType(returnType), element.name, ProviderKind.constructor,
+      getInjectedType(element.returnType), element.name, ProviderKind.constructor,
       singleton: isSingleton,
       dependencies: element.parameters
           .map((p) {
